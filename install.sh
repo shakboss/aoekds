@@ -47,11 +47,6 @@ clear
 # // Melakukan Update Dan Upgrade Data Server
 apt update -y
 apt upgrade -y
-apt install gnupg -y
-apt install tmux -y
-tmux new -s fn
-apt update -y
-apt upgrade -y
 apt install binutils -y
 apt install socat -y
 apt install ruby -y

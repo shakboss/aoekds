@@ -1,0 +1,7 @@
+### CONTOH lifetime 1.1.1.1 ON @RetriVPN
+### CONTOH1 2024-7-26 8.8.8.8 ON @RetriVPN
+### retri 2024-8-8 159.223.35.66 ON @RetriVPN
+### retrivpn 2024-8-8 178.128.213.181 ON @RetriVPN
+### test 2024-6-25 152.42.233.231 ON @RetriVPN
+### xxxx 2024-7-28 159.65.160.216 ON @RetriVPN
+### ram1 2024-7-28 165.22.240.43 ON @RetriVPN

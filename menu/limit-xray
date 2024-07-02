@@ -1,0 +1,62 @@
+#!/bin/bash
+LOCK_FILE="/tmp/multi_login_lock"
+
+function is_locked() {
+    [[ -e "$LOCK_FILE" ]]
+}
+
+function lock() {
+    touch "$LOCK_FILE"
+}
+
+function unlock() {
+    rm -f "$LOCK_FILE"
+}
+
+function send_log() {
+TEKS="
+Delete V2ray Account
+======================
+Username: ${user}
+Login IP：${cekcek} / ${iplimit}
+Akun Terhapus Dari Server jika ingin kembali gunakan Fitur Change UUID
+======================="
+CHATID=$(cat /etc/funny/.chatid)
+KEY=$(cat /etc/funny/.keybot)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+curl -s --max-time $TIME -d "chat_id=$CHATID&text=$TEKS" $URL
+clear
+}
+
+    if is_locked; then
+        echo "Akun terkunci. Tunggu 10 menit."
+        exit 0
+    fi
+
+    lock
+
+    echo -n > /var/log/xray/access.log
+    sleep 440
+    data=( $(ls /etc/funny/limit/xray/ip) )
+
+    for user in "${data[@]}"; do
+        iplimit=$(cat /etc/funny/limit/xray/ip/$user)
+        ehh=$(cat /var/log/xray/access.log | grep "$user" | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | sort | uniq)
+        cekcek=$(echo -e "$ehh" | wc -l)
+
+        if [[ $cekcek -gt $iplimit ]]; then
+            exp=$(grep -w "^### $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
+            sed -i "/^### $user $exp/,/^},{/d" /etc/xray/config.json
+            systemctl restart xray >> /dev/null 2>&1
+            jum2=$(cat /tmp/ipvmess.txt | wc -l)
+            rm -rf /etc/funny/limit/xray/ip/$user
+            send_log
+        else
+            echo ""
+        fi
+        sleep 0.1
+    done
+
+    sleep 900
+    unlock

@@ -1,0 +1,467 @@
+#!/bin/bash
+clear
+
+sht() {
+clear
+clear
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHT='\033[0;37m'
+#INPUT SSH
+domain=$(cat /etc/xray/domain)
+clear
+#echo -e "\e[33m===================================\033[0m"
+#echo -e "\E[40;1;37m            SSH Account            \E[0m"
+#echo -e "\e[33m===================================\033[0m"
+#read -p "Username       : " Login
+#read -p "Password       : " Pass
+#read -p "Max IP         : " iplimit
+#read -p "Expired (Days) : " masaaktif
+Login=trial`</dev/urandom tr -dc X-Z0-9 | head -c4`
+iplimit="2"
+Pass="1"
+masaaktif="1"
+clear
+#limitip
+if [[ $iplimit -gt 0 ]]; then
+echo -e "$iplimit" > /etc/funny/limit/ssh/ip/$Login
+else
+echo > /dev/null
+fi
+clear
+systemctl restart dropbear
+useradd -e `date -d "$masaaktif days" +"%Y-%m-%d"` -s /bin/false -M $Login
+expi="$(chage -l $Login | grep "Account expires" | awk -F": " '{print $2}')"
+echo -e "$Pass\n$Pass\n"|passwd $Login &> /dev/null
+hariini=`date -d "0 days" +"%Y-%m-%d"`
+expi=`date -d "$masaaktif days" +"%Y-%m-%d"`
+echo "$Login:$Pass" | sudo chpasswd
+domain=$(cat /etc/xray/domain)
+isp=$(cat /root/.myisp)
+city=$(cat /root/.mycity)
+region=$(cat /root/.region)
+clear
+TEKS="
+===============================
+ [ <= SSH && OVPN ACCOUNT => ]
+===============================
+
+Host/IP : $domain
+Wildcard: bug.com.${domain}
+Username: $Login
+Password: $Pass
+Expired : $expi
+Limit   : ${iplimit} Device
+===============================
+  Service & Port SSH Account
+
+Dropbear   : 109  | 111
+openSSH    : 22   | 3303
+HTTP Proxy : 8888 | 3128
+HTTPS WS   : 443  | 2095 | 53
+HTTP  WS   : 80   | 2082
+UDP CUSTOM :   1-65535
+UDP Request:   1-65535
+BadVPN     :    7300
+===============================
+Payload    : GET / HTTP/1.1[crlf]Host: [host_port][crlf]Upgrade: websocket[crlf]X-Online-Host: [host][crlf]X-Forward-Host: [host][crlf][crlf]
+===============================
+"
+CHATID=$(cat /etc/funny/.chatid)
+KEY=$(cat /etc/funny/.keybot)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+curl -s --max-time $TIME -d "chat_id=$CHATID&text=$TEKS" $URL
+clear
+clear
+echo -e " $TEKS "
+}
+
+tvm() {
+clear
+domain=$(cat /etc/xray/domain)
+#until [[ $user =~ ^[a-za-z0-9_]+$ && ${client_exists} == '0' ]]; do
+#clear
+#echo -e "\033[0;34m===================================\033[0m"
+#echo -e "\\e[0;41;36m      add v2ray/vmess account      \e[0m"
+#echo -e "\033[0;34m===================================\033[0m"
+#read -p "Username         : " user
+#read -p "Quota (GB)       : " quota
+#read -p "Max Ip login     : " iplimit
+#read -p "Masaaktif        : " masaaktif
+#client_exists=$(grep -w $user /etc/xray/config.json | wc -l)
+#if [[ ${client_exists} == '1' ]]; then
+#clear
+#echo -e "\033[0;34m===================================\033[0m"
+#echo -e "\\e[0;41;36m      add v2ray/vmess account      \e[0m"
+#echo -e "\033[0;34m===================================\033[0m"
+#echo ""
+#echo "a client with the specified name was already created, please choose another name."
+#echo ""
+#echo -e "\033[0;34m===================================\033[0m"
+#read -n 1 -s -r -p "press any key to back on menu"
+#menu
+#fi
+#done
+user=trial`</dev/urandom tr -dc X-Z0-9 | head -c4`
+uuid=$(cat /proc/sys/kernel/random/uuid)
+masaaktif=1
+quota=100
+iplimit=2
+#QUOTA
+if [[ $quota -gt 0 ]]; then
+echo -e "$[$quota * 1024 * 1024 * 1024]" > /etc/funny/limit/xray/quota/$user
+else
+echo > /dev/null
+fi
+
+#IPLIMIT
+if [[ $iplimit -gt 0 ]]; then
+echo -e "$iplimit" > /etc/funny/limit/xray/ip/$user
+else
+echo > /dev/null
+fi
+clear
+uuid=$(cat /proc/sys/kernel/random/uuid)
+exp=`date -d "$masaaktif days" +"%y-%m-%d"`
+sed -i '/#vmess$/a\### '"$user $exp"'\
+},{"id": "'""$uuid""'","alterid": '"0"',"email": "'""$user""'"' /etc/xray/config.json
+sed -i '/#vmess$/a\### '"$user $exp"'\
+},{"id": "'""$uuid""'","alterid": '"0"',"email": "'""$user""'"' /etc/xray/vmess.json
+acs=`cat<<eof
+{
+"v": "2",
+"ps": "${user}",
+"add": "${domain}",
+"port": "443",
+"id": "${uuid}",
+"aid": "0",
+"net": "ws",
+"path": "/vmessws",
+"type": "none",
+"host": "${domain}",
+"tls": "tls"
+}
+eof`
+ask=`cat<<eof
+{
+"v": "2",
+"ps": "${user}",
+"add": "${domain}",
+"port": "80",
+"id": "${uuid}",
+"aid": "0",
+"net": "ws",
+"path": "/vmessws",
+"type": "none",
+"host": "${domain}",
+"tls": "none"
+}
+eof`
+grpc=`cat<<eof
+{
+"v": "2",
+"ps": "${user}",
+"add": "${domain}",
+"port": "443",
+"id": "${uuid}",
+"aid": "0",
+"net": "grpc",
+"path": "vmess-grpc",
+"type": "none",
+"host": "${domain}",
+"tls": "tls"
+}
+eof`
+hts=`cat<<eof
+{
+"v": "2",
+"ps": "${user}",
+"add": "${domain}",
+"port": "80",
+"id": "${uuid}",
+"aid": "0",
+"net": "httpupgrade",
+"path": "/love-dinda",
+"type": "httpupgrade",
+"host": "${domain}",
+"tls": "none"
+}
+eof`
+cs=`cat<<eof
+{
+"v": "2",
+"ps": "${user}",
+"add": "${domain}",
+"port": "443",
+"id": "${uuid}",
+"aid": "0",
+"net": "httpupgrade",
+"path": "/love-dinda",
+"type": "httpupgrade",
+"host": "${domain}",
+"tls": "tls"
+}
+eof`
+vmess_base641=$( base64 -w 0 <<< $vmess_json1)
+vmess_base642=$( base64 -w 0 <<< $vmess_json2)
+vmess_base643=$( base64 -w 0 <<< $vmess_json3)
+vmesslink1="vmess://$(echo $acs | base64 -w 0)"
+vmesslink2="vmess://$(echo $ask | base64 -w 0)"
+vmesslink3="vmess://$(echo $grpc | base64 -w 0)"
+vmesslink4="vmess://$(echo $hts | base64 -w 0)"
+vmesslink5="vmess://$(echo $cs | base64 -w 0)"
+systemctl daemon-reload ; systemctl restart xray v2ray > /dev/null 2>&1
+service cron restart > /dev/null 2>&1
+clear
+TEKS="
+================================
+[<=   v2ray vmess acount   =>]
+================================
+hostname     : $domain
+wildcard     : bug.com.${domain}
+username     : $user
+expired      : $exp
+================================
+    acount information
+================================
+network      : websocket, http upgrade
+id / uuid    : $uuid
+path ws      : /vmessws, /love [ /worryfree /kuota-habis ]
+service name : vmess-grpc
+dynamic path : https://bug.com/path
+limit        : ${quota} GB | ${iplimit} Device
+port         : 53, 443, 2095 | 80, 2082
+================================
+link tls          : ${vmesslink1}
+================================
+link nontls       : ${vmesslink2}
+================================
+link http tls     : ${vmesslink5}
+================================
+link http ntls    : ${vmesslink4}
+================================
+link grpc         : ${vmesslink3}
+================================"
+CHATID=$(cat /etc/funny/.chatid)
+KEY=$(cat /etc/funny/.keybot)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+curl -s --max-time $TIME -d "chat_id=$CHATID&text=$TEKS" $URL
+clear
+clear
+echo -e " $TEKS "
+}
+
+tvl() {
+clear
+domain=$(cat /etc/xray/domain)
+user=trial`</dev/urandom tr -dc X-Z0-9 | head -c4`
+uuid=$(cat /proc/sys/kernel/random/uuid)
+masaaktif=1
+iplimit=2
+quota=100
+#QUOTA
+if [[ $quota -gt 0 ]]; then
+echo -e "$[$quota * 1024 * 1024 * 1024]" > /etc/funny/limit/xray/quota/$user
+else
+echo > /dev/null
+fi
+#IPLIMIT
+if [[ $iplimit -gt 0 ]]; then
+echo -e "$iplimit" > /etc/funny/limit/xray/ip/$user
+else
+echo > /dev/null
+fi
+clear
+uuid=$(cat /proc/sys/kernel/random/uuid)
+exp=`date -d "$masaaktif days" +"%y-%m-%d"`
+sed -i '/#vless$/a\### '"$user $exp"'\
+},{"id": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+vlesslink1="vless://${uuid}@${domain}:443?path=/vlessws&security=tls&encryption=none&type=ws#${user}"
+vlesslink2="vless://${uuid}@${domain}:80?path=/vlessws&encryption=none&type=ws#${user}"
+vlesslink3="vless://${uuid}@${domain}:443?mode=gun&security=tls&encryption=none&type=grpc&servicename=vless-grpc&sni=${domain}#${user}"
+vlesslink4="vless://${uuid}@${domain}:443?path=/rere&security=tls&encryption=none&host=${domain}&type=httpupgrade&sni=${domain}#${user}"
+vlesslink5="vless://${uuid}@${domain}:80?path=/rere&security=none&encryption=none&host=${domain}&type=httpupgrade#${user}"
+systemctl daemon-reload ; systemctl restart xray v2ray > /dev/null 2>&1
+clear
+TEKS="
+================================
+[<=   v2ray vless acount   =>]
+================================
+hostname     : $domain
+wildcard     : bug.com.${domain}
+username     : $user
+expired      : $exp
+================================
+     acount information
+================================
+network      : ws, httpupgrade
+id / uuid    : $uuid
+path ws      : /vlessws, /rere
+dynamic path : https://bug.com/path
+service name : vless-grpc
+limit        : ${quota} GB | ${iplimit} Device
+port         : 53, 443, 2059 | 80, 2082
+================================
+link tls        : ${vlesslink1}
+================================
+link nontls     : ${vlesslink2}
+================================
+httpupgrade tls ; ${vlesslink4}
+================================
+httpupgrade ntls: ${vlesslink5}
+================================
+link grpc       : ${vlesslink3}
+================================"
+CHATID=$(cat /etc/funny/.chatid)
+KEY=$(cat /etc/funny/.keybot)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+curl -s --max-time $TIME -d "chat_id=$CHATID&text=$TEKS" $URL
+clear
+clear
+echo -e " $TEKS "
+}
+
+trj() {
+clear
+domain=$(cat /etc/xray/domain)
+user=trial`</dev/urandom tr -dc X-Z0-9 | head -c4`
+masaaktif=1
+iplimit=2
+quota=100
+#done
+#QUOTA
+if [[ $quota -gt 0 ]]; then
+echo -e "$[$quota * 1024 * 1024 * 1024]" > /etc/funny/limit/xray/quota/$user
+else
+echo > /dev/null
+fi
+
+#IPLIMIT
+if [[ $iplimit -gt 0 ]]; then
+echo -e "$iplimit" > /etc/funny/limit/xray/ip/$user
+else
+echo > /dev/null
+fi
+clear
+uuid=$(cat /proc/sys/kernel/random/uuid)
+exp=`date -d "$masaaktif days" +"%y-%m-%d"`
+sed -i '/#trojan$/a\### '"$user $exp"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+trojanlink1="trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&servicename=trojan-grpc&sni=${domain}#${user}"
+trojanlink="trojan://${uuid}@${domain}:443?path=%2ftrojanws&security=tls&host=${domain}&type=ws&sni=${domain}#${user}"
+trojanlink9="trojan://${uuid}@${domain}:443?path=/dinda&security=tls&host=${domain}&type=httpupgrade&sni=${domain}#${user}"
+systemctl daemon-reload ; systemctl restart xray v2ray > /dev/null 2>&1
+clear
+TEKS="
+================================
+[<=      trojan acount       =>]
+================================
+hostname    : ${domain}
+wildcard    : bug.com.${domain}
+username    : ${user}
+expired     : ${exp}
+================================
+    acount information
+================================
+uuid/key     : $uuid
+path         : /trojanws, /dinda
+dynamic path : https://bug.com/path
+service name : trojan-grpc
+limit        : ${quota} GB | ${iplimit} Device
+Port         : 53, 443, 2095 | 80, 2082
+================================
+ws/go        : $trojanlink
+================================
+lhttp upgrade: $trojanlink9
+================================
+trojan grpc  : $trojanlink1
+================================"
+CHATID=$(cat /etc/funny/.chatid)
+KEY=$(cat /etc/funny/.keybot)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+curl -s --max-time $TIME -d "chat_id=$CHATID&text=$TEKS" $URL
+clear
+clear
+echo -e " $TEKS "
+}
+
+trn() {
+domain=$(cat /etc/xray/domain)
+clear
+#echo -e "
+#====================
+#Add Account NoobzVPN
+#===================="
+#read -p "Username  : " user
+#read -p "Password  : " pass
+#read -p "Masa Aktif: " masaaktif
+user=trial`</dev/urandom tr -dc X-Z0-9 | head -c4`
+masaaktif=1
+pass=1
+clear
+noobzvpns --add-user "$user" "$pass"
+noobzvpns --expired-user "$username" "$masaaktif"
+expi=`date -d "$masaaktif days" +"%Y-%m-%d"`
+echo "### ${user} ${expi}" >>/etc/funny/.noob
+clear
+TEKS="
+================
+NoobzVPN Account
+================
+Hostname  : $domain
+Username  : $user
+Password  : $pass
+================
+TCP_STD/HTTP  : 8080
+TCP_SSL/HTTPS : 9443
+================
+Expired   : $expi
+================"
+CHATID=$(cat /etc/funny/.chatid)
+KEY=$(cat /etc/funny/.keybot)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+curl -s --max-time $TIME -d "chat_id=$CHATID&text=$TEKS" $URL
+clear
+clear
+echo -e " $TEKS "
+}
+
+menut() {
+clear
+echo -e "
+====================
+[ <= Trial Menu => ]
+====================
+
+1 -> Trial SSH Account
+2 -> Trial Vmess Account
+3 -> Trial Vless Account
+4 -> Trial Trojan Account
+5 -> Trial ShadowSocks Account
+6 -> Trial NoobzVPN'S New Account
+====================
+Press CTRL + C To Exit
+"
+read -p "Input Option: " apw
+case $apw in
+1) clear ; sht ; exit ; menu ;;
+2) clear ; tvm ; exit ; menu ;;;
+3) clear ; tvl ; exit ; menu ;;;
+4) clear ; trj ; exit ; menu ;;;
+5) echo "Coming Soon" ; exit ; menu ;;;
+6) clear ; trn ; exit ; menu ;;;
+*) menut ;;
+esac
+}
+
+menut

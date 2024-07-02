@@ -32,7 +32,7 @@ NC='\e[0m'
 MYIP=$(curl -s ifconfig.me)
 clear
 #IZIN=$( curl https://raw.githubusercontent.com/SKYRZ1/aoekds/main/izinip | grep $MYIP )
-IZIN=$(curl -s https://raw.githubusercontent.com/SKYRZ1/aoekds/main/izinip | grep "$MYIP" | awk '{ print $4 }')
+IZIN=$(curl -s "${link}/izinip" | grep "$MYIP" | awk '{ print $4 }')
 if [ $MYIP = $IZIN ]; then
 echo -e "${green}IJIN DI TERIMA...${NC}"
 else
@@ -1304,7 +1304,7 @@ echo "LABEL=/boot /boot ext2 default, ro 1 2" >> /etc/
 clear
 echo "Setelah selesai menginstall script harap buka menu Bot di menu nomor 8 untuk menginstall Bot Telegram yang sangat wajib dan Penting."
 sleep 6
-# // Menghapus File Installasj
+# // Menghapus File Installasi
 cd
 rm -fr *
 rm -fr bash_history

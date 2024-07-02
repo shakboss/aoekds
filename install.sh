@@ -20,7 +20,7 @@ nameserver 8.8.8.8
 nameserver 8.4.8.4
 " >> /etc/resolv.conf
 
-link="https://raw.githubusercontent.com/retri12/script/main"
+link="https://raw.githubusercontent.com/SKYRZ1/aoekds/main"
 # [ Warna ]
 red='\e[1;31m'
 green='\e[0;32m'
@@ -45,6 +45,11 @@ fi
 clear
 
 # // Melakukan Update Dan Upgrade Data Server
+apt update -y
+apt upgrade -y
+apt install gnupg -y
+apt install tmux -y
+tmux new -s fn
 apt update -y
 apt upgrade -y
 apt install binutils -y

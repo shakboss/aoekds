@@ -13,8 +13,12 @@
 # /*
 
 clear
-rm -fr /etc/resolv.conf
-echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+#rm -fr /etc/resolv.conf
+echo "nameserver 1.1.1.1
+nameserver 1.0.0.1
+nameserver 8.8.8.8
+nameserver 8.4.8.4
+" >> /etc/resolv.conf
 
 link="https://raw.githubusercontent.com/SKYRZ1/aoekds/main"
 # [ Warna ]

@@ -229,6 +229,7 @@ read -p "Install certificate for IPv4 or IPv6? (4/6): " ip_version
 #read -p "Enter domain: " domain
 if [[ $ip_version == "4" ]]; then
     systemctl stop nginx
+    rm -fr /root/.acme.sh/acme.sh
     mkdir /root/.acme.sh
     curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
     chmod +x /root/.acme.sh/acme.sh
@@ -238,6 +239,7 @@ if [[ $ip_version == "4" ]]; then
     echo "Cert installed for IPv4."
 elif [[ $ip_version == "6" ]]; then
     systemctl stop nginx
+    rm -fr /root/.acme.sh/acme.sh
     mkdir /root/.acme.sh
     curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
     chmod +x /root/.acme.sh/acme.sh

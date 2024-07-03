@@ -13,7 +13,7 @@
 # /*
 
 clear
-#rm -fr /etc/resolv.conf
+rm -fr /etc/resolv.conf
 echo "nameserver 1.1.1.1
 nameserver 1.0.0.1
 nameserver 8.8.8.8

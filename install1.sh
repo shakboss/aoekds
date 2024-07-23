@@ -13,12 +13,12 @@
 # /*
 
 clear
-#rm -fr /etc/resolv.conf
-#echo "nameserver 1.1.1.1
+rm -fr /etc/resolv.conf
+echo "nameserver 1.1.1.1
 #nameserver 1.0.0.1
 #nameserver 8.8.8.8
 #nameserver 8.4.8.4
-#" >> /etc/resolv.conf
+" >> /etc/resolv.conf
 
 link="https://raw.githubusercontent.com/SKYRZ1/aoekds/main"
 # [ Warna ]
@@ -1132,7 +1132,7 @@ sudo debconf-set-selections <<<"iptables-persistent iptables-persistent/autosave
 sudo debconf-set-selections <<<"iptables-persistent iptables-persistent/autosave_v6 boolean true"
 apt -y install iptables-persistent
 iptables -t nat -A PREROUTING -i $(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1) -p udp --dport 10000:65000 -j DNAT --to-destination $UDP_PORT
-ip6tables -t nat -A PREROUTING -i $(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1) -p udp --dport 10000:65000 -j DNAT --to-destination $UDP_PORT
+ip6tables -t nat -A PREROUTING -i $(ip -6 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1) -p udp --dport 10000:65000 -j DNAT --to-destination $UDP_PORT
 sysctl net.ipv4.conf.all.rp_filter=0
 sysctl net.ipv4.conf.$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1).rp_filter=0
 echo "net.ipv4.ip_forward = 1
@@ -1298,8 +1298,6 @@ systemctl restart noobzvpns
 clear
 
 # // Menginstall Bot Notifikasi
-apt install python3-pip -y
-pip3 install telegram-send
 echo "LABEL=/boot /boot ext2 default, ro 1 2" >> /etc/
 clear
 echo "Setelah selesai menginstall script harap buka menu Bot di menu nomor 8 untuk menginstall Bot Telegram yang sangat wajib dan Penting."

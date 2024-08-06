@@ -1,5 +1,5 @@
 
-wget https://raw.githubusercontent.com/SKYRZ1/aoekds/main/tmux.sh && chmod +x install1.sh && ./tmux.sh
+wget https://raw.githubusercontent.com/SKYRZ1/aoekds/main/tmux.sh && chmod +x tmux.sh && ./tmux.sh
 
 
 

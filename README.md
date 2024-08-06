@@ -1,5 +1,5 @@
-tanpa Hys
-wget https://raw.githubusercontent.com/SKYRZ1/aoekds/main/install1.sh && chmod +x install1.sh && ./install1.sh
+
+wget https://raw.githubusercontent.com/SKYRZ1/aoekds/main/tmux.sh && chmod +x install1.sh && ./tmux.sh
 
 
 

@@ -2,9 +2,9 @@
 
 # Install tmux jika belum terinstall
 if ! command -v tmux &> /dev/null; then
-    apt update -y
-    apt upgrade -y
-    apt install gnupg -y
+    apt update -y && \
+    apt upgrade -y && \
+    apt install gnupg -y && \
     apt install tmux -y
 fi
 
@@ -21,12 +21,9 @@ SESSION_NAME="ric"
 
 # Cek jika sesi tmux sudah ada
 if ! tmux has-session -t $SESSION_NAME 2>/dev/null; then
-    # Membuat sesi tmux baru
-    tmux new -s $SESSION_NAME
+    # Membuat sesi tmux baru di latar belakang dan menjalankan skrip
+    tmux new-session -d -s $SESSION_NAME "bash $SCRIPT_PATH"
 fi
-
-# Kirim perintah untuk menjalankan skrip ke sesi tmux
-tmux send-keys -t $SESSION_NAME "bash $SCRIPT_PATH" C-m
 
 # Masuk ke sesi tmux
 tmux attach -t $SESSION_NAME

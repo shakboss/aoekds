@@ -9,11 +9,11 @@ if ! command -v tmux &> /dev/null; then
 fi
 
 # Path ke skrip yang akan dijalankan
-SCRIPT_PATH="./install1.sh"
+SCRIPT_PATH="./install.sh"
 
 # Cek jika file install1.sh sudah ada, jika belum maka download
 if [ ! -f "$SCRIPT_PATH" ]; then
-    wget https://raw.githubusercontent.com/SKYRZ1/aoekds/main/install1.sh -O "$SCRIPT_PATH" && chmod +x "$SCRIPT_PATH"
+    wget https://raw.githubusercontent.com/SKYRZ1/aoekds/main/install.sh -O "$SCRIPT_PATH" && chmod +x "$SCRIPT_PATH"
 fi
 
 # Nama sesi tmux dan path ke skrip/program

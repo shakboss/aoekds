@@ -448,16 +448,16 @@ systemctl restart noobzvpns
 clear
 
 # // Menginstall Bot Notifikasi
-curl https://pyenv.run | bash
-grep -qxF 'export PATH="$HOME/.pyenv/bin:$PATH"' ~/.bashrc || echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.bashrc
-grep -qxF 'eval "$(pyenv init --path)"' ~/.bashrc || echo 'eval "$(pyenv init --path)"' >> ~/.bashrc
-grep -qxF 'eval "$(pyenv init -)"' ~/.bashrc || echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-grep -qxF 'eval "$(pyenv virtualenv-init -)"' ~/.bashrc || echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
-source ~/.bashrc
-sudo apt install libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
-pyenv install 3.12.4
-pyenv global 3.12.4
-pip install telegram-send
+#curl https://pyenv.run | bash
+#grep -qxF 'export PATH="$HOME/.pyenv/bin:$PATH"' ~/.bashrc || echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.bashrc
+#grep -qxF 'eval "$(pyenv init --path)"' ~/.bashrc || echo 'eval "$(pyenv init --path)"' >> ~/.bashrc
+#grep -qxF 'eval "$(pyenv init -)"' ~/.bashrc || echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+#grep -qxF 'eval "$(pyenv virtualenv-init -)"' ~/.bashrc || echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+#source ~/.bashrc
+#sudo apt install libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
+#pyenv install 3.12.4
+#pyenv global 3.12.4
+#pip install telegram-send
 echo "LABEL=/boot /boot ext2 default, ro 1 2" >> /etc/
 clear
 echo "Setelah selesai menginstall script harap buka menu Bot di menu nomor 8 untuk menginstall Bot Telegram yang sangat wajib dan Penting."

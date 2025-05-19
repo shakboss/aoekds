@@ -24,19 +24,19 @@ white='\e[037;1m'
 grey='\e[1;36m'
 NC='\e[0m'
 
-MYIP=$(curl -s ifconfig.me)
-clear
-IZIN=$( curl https://github.com/shakboss/aoekds/blob/main/izinip | grep $MYIP | awk '{ print $4 }' )
-if [ $MYIP = $IZIN ]; then
-echo -e "${green}IJIN DI TERIMA...${NC}"
-else
-clear
-echo -e "${red}IZIN DI TOLAK!${NC}";
-echo "SILAHKAN TANYA KE PEMILIK"
-echo "Telegram t.me/RicOnly"
-exit 1
-fi
-clear
+#MYIP=$(curl -s ifconfig.me)
+#clear
+#IZIN=$( curl https://github.com/shakboss/aoekds/blob/main/izinip | grep $MYIP | awk '{ print $4 }' )
+#if [ $MYIP = $IZIN ]; then
+#echo -e "${green}IJIN DI TERIMA...${NC}"
+#else
+#clear
+#echo -e "${red}IZIN DI TOLAK!${NC}";
+#echo "SILAHKAN TANYA KE PEMILIK"
+#echo "Telegram t.me/RicOnly"
+#exit 1
+#fi
+#clear
 
 # // Melakukan Update Dan Upgrade Data Server
 apt update -y

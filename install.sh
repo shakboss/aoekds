@@ -26,7 +26,7 @@ NC='\e[0m'
 
 MYIP=$(curl -s ifconfig.me)
 clear
-IZIN=$( curl https://raw.githubusercontent.com/SKYRZ1/aoekds/main/izinip | grep $MYIP | awk '{ print $4 }' )
+IZIN=$( curl https://github.com/shakboss/aoekds/blob/main/izinip | grep $MYIP | awk '{ print $4 }' )
 if [ $MYIP = $IZIN ]; then
 echo -e "${green}IJIN DI TERIMA...${NC}"
 else

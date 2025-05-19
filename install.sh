@@ -15,7 +15,7 @@
 clear
 
 
-link="https://raw.githubusercontent.com/SKYRZ1/aoekds/main"
+link="https://raw.githubusercontent.com/shakboss/aoekds/main"
 # [ Warna ]
 red='\e[1;31m'
 green='\e[0;32m'

@@ -9,6 +9,6 @@ apt update -y ; apt upgrade -y ; apt install gnupg -y ; apt install tmux -y ; tm
 
 TAHAP 2
 
-wget https://raw.githubusercontent.com/SKYRZ1/aoekds/main/install.sh && chmod +x install.sh && ./install.sh
+wget https://raw.githubusercontent.com/shakboss/aoekds/main/install.sh && chmod +x install.sh && ./install.sh
 
 tmux attach-session -t fn
